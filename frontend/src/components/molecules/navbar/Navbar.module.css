@@ -1,0 +1,218 @@
+/* Navbar.module.css */
+.navbar {
+  background-color: var(--color-background);
+  height: var(--header-height);
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+}
+
+.container {
+  /* max-width: var(--container-width-lg); */
+  max-width: var(100%);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbarBrand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: calc(var(--header-height) - var(--spacing-lg));
+  display: flex;
+  align-items: center;
+}
+
+.logoText {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast) var(--transition-timing-function);
+}
+
+.logoText:hover {
+  color: var(--color-primary-dark);
+}
+
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.navLinks {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--spacing-md);
+}
+
+.navItem {
+  position: relative;
+}
+
+.navLink {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  text-decoration: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  transition:
+    color var(--transition-fast) var(--transition-timing-function),
+    background-color var(--transition-fast) var(--transition-timing-function);
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  text-decoration: none;
+}
+
+.navLink.active {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.navLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-full);
+}
+
+.navIcon {
+  margin-right: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+}
+
+.themeToggle {
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color var(--transition-fast) var(--transition-timing-function),
+    background-color var(--transition-fast) var(--transition-timing-function);
+}
+
+.themeToggle:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+}
+
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+}
+
+.hamburger {
+  display: block;
+  position: relative;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-text-primary);
+  transition: background-color var(--transition-fast) var(--transition-timing-function);
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-text-primary);
+  transition: transform var(--transition-fast) var(--transition-timing-function);
+}
+
+.hamburger::before {
+  top: -6px;
+}
+
+.hamburger::after {
+  bottom: -6px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .menuToggle {
+    display: block;
+    z-index: var(--z-index-fixed);
+  }
+
+  .navMenu {
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    width: 100%;
+    height: 0;
+    background-color: var(--color-background);
+    flex-direction: column;
+    overflow: hidden;
+    transition: height var(--transition-normal) var(--transition-timing-function);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .navMenu.active {
+    height: auto;
+    padding: var(--spacing-md) 0;
+  }
+
+  .navLinks {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navItem {
+    width: 100%;
+  }
+
+  .navLink {
+    padding: var(--spacing-md);
+    width: 100%;
+  }
+
+  .navLink.active::after {
+    display: none;
+  }
+
+  .navLink.active {
+    background-color: var(--color-surface);
+  }
+
+  .menuToggle.active .hamburger {
+    background-color: transparent;
+  }
+
+  .menuToggle.active .hamburger::before {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .menuToggle.active .hamburger::after {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+}

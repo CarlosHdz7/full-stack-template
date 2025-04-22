@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      // vite.config.js should have the same alias
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
+      "@utils/*": ["src/lib/utils/*"],
+      "@constants/*": ["src/lib/constants/*"],
+      "@contexts/*": ["src/lib/contexts/*"],
+      "@hooks/*": ["src/lib/hooks/*"],
+      "@locales/*": ["src/lib/locales/*"],
+      "@services/*": ["src/lib/services/api/*"]
+    }
+  },
+  "include": ["src"]
+}

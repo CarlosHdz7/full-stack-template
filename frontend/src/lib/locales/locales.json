@@ -1,0 +1,56 @@
+{
+  "en": {
+    "navbar": {
+      "home": "Home",
+      "about": "About",
+      "login": "Login",
+      "signup": "Sign Up"
+    },
+    "sidebar": {
+      "home": "Home",
+      "settings": "Settings",
+      "profile": "Profile"
+    },
+    "pages": {
+      "home": {
+        "welcome": "Welcome",
+        "description": "This is a simple example of a React Page  using CSS Modules.",
+        "button1": "Login",
+        "button2": "About",
+        "button3": "Action 3",
+        "button4": "Action 4"
+      },
+      "about": {
+        "welcome": "About Us",
+        "description": "This is a simple example of a React Page  using CSS Modules."
+      }
+    }
+  },
+  "es": {
+    "navbar": {
+      "home": "Inicio",
+      "about": "Acerca de",
+      "login": "Entrar",
+      "signup": "Registrarse"
+    },
+    "sidebar": {
+      "home": "Inicio",
+      "settings": "Configuración",
+      "profile": "Perfil"
+    },
+    "pages": {
+      "home": {
+        "welcome": "Bienvenido",
+        "description": "Este es un ejemplo simple de una página React que utiliza módulos CSS.",
+        "button1": "Entrar",
+        "button2": "Acerca de",
+        "button3": "Acción 3",
+        "button4": "Acción 4"
+      },
+      "about": {
+        "welcome": "Acerca de Nosotros",
+        "description": "Este es un ejemplo simple de una página React que utiliza módulos CSS."
+      }
+    }
+  }
+}

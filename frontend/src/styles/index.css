@@ -1,0 +1,10 @@
+@import './variables.css';
+@import './reset.css';
+@import './utils.css';
+@import './grid.css';
+@import './themes.css';
+
+/* Aquí puedes agregar estilos globales adicionales */
+/* * {
+  border: 1px solid red;
+} */

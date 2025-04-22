@@ -1,0 +1,117 @@
+/* Sidebar.module.css */
+
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--color-surface);
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--transition-normal) var(--transition-timing-function);
+}
+
+.logo {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  color: var(--color-primary);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.logo h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: 0;
+}
+
+.navigation {
+  flex: 1;
+  padding: var(--spacing-md) 0;
+  overflow-y: auto;
+}
+
+.menuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  border-radius: 0;
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.menuItem:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  color: var(--color-text-primary);
+  text-decoration: none;
+}
+
+.menuItem.active {
+  background-color: rgba(63, 81, 181, 0.08);
+  color: var(--color-primary);
+  border-left: 3px solid var(--color-primary);
+}
+
+.icon {
+  margin-right: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  flex: 1;
+}
+
+.footer {
+  padding: var(--spacing-md);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 4.5rem;
+  }
+
+  .logo h2 {
+    display: none;
+  }
+
+  .label {
+    display: none;
+  }
+
+  .menuItem {
+    justify-content: center;
+    padding: var(--spacing-md);
+  }
+
+  .icon {
+    margin-right: 0;
+  }
+
+  .footer {
+    display: none;
+  }
+}

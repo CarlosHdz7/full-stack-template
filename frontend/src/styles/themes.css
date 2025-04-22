@@ -1,0 +1,36 @@
+/* Dark Theme */
+.theme-dark {
+  --color-primary: #4caf50;
+  --color-primary-light: #4caf50;
+  --color-background: #121212;
+  --color-surface: #1e1e1e;
+  --color-text-primary: rgba(255, 255, 255, 0.87);
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-text-disabled: rgba(255, 255, 255, 0.38);
+
+  /* Texto */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(0, 0, 0, 0.6);
+  --color-text-disabled: rgba(0, 0, 0, 0.38);
+  --color-text-on-primary: #ffffff;
+  --color-text-on-secondary: #ffffff;
+
+  --input-border: 1px solid rgba(255, 255, 255, 1);
+}
+
+/* High Contrast Theme */
+.theme-high-contrast {
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-text-primary: #000000;
+  --color-text-secondary: #000000;
+  --color-text-disabled: #505050;
+
+  --color-primary: #0000ff;
+  --color-primary-light: #0000aa;
+  --color-secondary: #ff0000;
+
+  --border-radius-sm: 0;
+  --border-radius-md: 0;
+  --border-radius-lg: 0;
+}

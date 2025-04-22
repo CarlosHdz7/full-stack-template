@@ -1,0 +1,82 @@
+.inputContainer {
+  position: relative;
+  margin-bottom: var(--spacing-md);
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  height: var(--input-height);
+  padding: var(--input-padding);
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  transition: border var(--transition-fast) var(--transition-timing-function);
+}
+
+.input:focus {
+  outline: none;
+  border: var(--input-focus-border);
+}
+
+.input:disabled {
+  background-color: var(--color-surface);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-xs);
+}
+
+.inputError {
+  border-color: var(--color-error);
+}
+
+.inputSuccess {
+  border-color: var(--color-success);
+}
+
+.helperText {
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-xs);
+  color: var(--color-text-secondary);
+}
+
+.prefixIcon,
+.suffixIcon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
+.prefixIcon {
+  left: var(--spacing-sm);
+}
+
+.suffixIcon {
+  right: var(--spacing-sm);
+}
+
+.withPrefixIcon {
+  padding-left: calc(var(--spacing-sm) * 3);
+}
+
+.withSuffixIcon {
+  padding-right: calc(var(--spacing-sm) * 3);
+}

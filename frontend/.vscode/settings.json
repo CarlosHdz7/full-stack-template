@@ -1,0 +1,17 @@
+{
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.editor.customLabels.patterns": {
+    "**/pages/**": "${filename}.${extname} - Page",
+    "**/components/atoms/**": "${filename}.${extname} - Atom",
+    "**/components/molecules/**": "${filename}.${extname} - Molecule",
+    "**/components/layouts/**": "${filename}.${extname} - Layout",
+    "**/components/organisms/**": "${filename}.${extname} - Organisms"
+  }
+}
