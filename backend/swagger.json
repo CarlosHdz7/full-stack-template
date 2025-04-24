@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Sistema de Autenticaci\u00f3n - API",
+    "title": "Sistema de Autenticación - API",
     "version": "1.0.0",
-    "description": "API para gesti\u00f3n de usuarios, roles, permisos, m\u00f3dulos y componentes usando procedimientos almacenados."
+    "description": "API para gestión de usuarios, roles, permisos y recursos usando procedimientos almacenados."
   },
   "servers": [
     {
@@ -14,18 +14,16 @@
   "paths": {
     "/users": {
       "get": {
-        "summary": "Listar users",
+        "summary": "Listar usuarios",
         "tags": ["Users"],
         "responses": {
           "200": {
-            "description": "\u00c9xito",
+            "description": "Lista de usuarios",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/User"
-                  }
+                  "items": { "$ref": "#/components/schemas/User" }
                 }
               }
             }
@@ -33,25 +31,19 @@
         }
       },
       "post": {
-        "summary": "Crear user",
+        "summary": "Crear usuario",
         "tags": ["Users"],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserInput"
-              }
+              "schema": { "$ref": "#/components/schemas/UserInput" }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "User creado"
-          },
-          "400": {
-            "description": "Error de validaci\u00f3n"
-          }
+          "201": { "description": "Usuario creado" },
+          "400": { "description": "Error de validación" }
         }
       }
     },
@@ -61,14 +53,12 @@
         "tags": ["Roles"],
         "responses": {
           "200": {
-            "description": "\u00c9xito",
+            "description": "Lista de roles",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Role"
-                  }
+                  "items": { "$ref": "#/components/schemas/Role" }
                 }
               }
             }
@@ -76,42 +66,34 @@
         }
       },
       "post": {
-        "summary": "Crear role",
+        "summary": "Crear rol",
         "tags": ["Roles"],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoleInput"
-              }
+              "schema": { "$ref": "#/components/schemas/RoleInput" }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Role creado"
-          },
-          "400": {
-            "description": "Error de validaci\u00f3n"
-          }
+          "201": { "description": "Rol creado" },
+          "400": { "description": "Error de validación" }
         }
       }
     },
     "/permissions": {
       "get": {
-        "summary": "Listar permissions",
+        "summary": "Listar permisos",
         "tags": ["Permissions"],
         "responses": {
           "200": {
-            "description": "\u00c9xito",
+            "description": "Lista de permisos",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Permission"
-                  }
+                  "items": { "$ref": "#/components/schemas/Permission" }
                 }
               }
             }
@@ -119,42 +101,34 @@
         }
       },
       "post": {
-        "summary": "Crear permission",
+        "summary": "Crear permiso",
         "tags": ["Permissions"],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PermissionInput"
-              }
+              "schema": { "$ref": "#/components/schemas/PermissionInput" }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Permission creado"
-          },
-          "400": {
-            "description": "Error de validaci\u00f3n"
-          }
+          "201": { "description": "Permiso creado" },
+          "400": { "description": "Error de validación" }
         }
       }
     },
-    "/modules": {
+    "/resources": {
       "get": {
-        "summary": "Listar modules",
-        "tags": ["Modules"],
+        "summary": "Listar recursos",
+        "tags": ["Resources"],
         "responses": {
           "200": {
-            "description": "\u00c9xito",
+            "description": "Lista de recursos",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Module"
-                  }
+                  "items": { "$ref": "#/components/schemas/Resource" }
                 }
               }
             }
@@ -162,111 +136,19 @@
         }
       },
       "post": {
-        "summary": "Crear module",
-        "tags": ["Modules"],
+        "summary": "Crear recurso",
+        "tags": ["Resources"],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ModuleInput"
-              }
+              "schema": { "$ref": "#/components/schemas/ResourceInput" }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Module creado"
-          },
-          "400": {
-            "description": "Error de validaci\u00f3n"
-          }
-        }
-      }
-    },
-    "/submodules": {
-      "get": {
-        "summary": "Listar submodules",
-        "tags": ["Submodules"],
-        "responses": {
-          "200": {
-            "description": "\u00c9xito",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Submodule"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Crear submodule",
-        "tags": ["Submodules"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmoduleInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Submodule creado"
-          },
-          "400": {
-            "description": "Error de validaci\u00f3n"
-          }
-        }
-      }
-    },
-    "/components": {
-      "get": {
-        "summary": "Listar components",
-        "tags": ["Components"],
-        "responses": {
-          "200": {
-            "description": "\u00c9xito",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Component"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Crear component",
-        "tags": ["Components"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ComponentInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Component creado"
-          },
-          "400": {
-            "description": "Error de validaci\u00f3n"
-          }
+          "201": { "description": "Recurso creado" },
+          "400": { "description": "Error de validación" }
         }
       }
     }
@@ -276,223 +158,104 @@
       "User": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
-          },
-          "username": {
-            "type": "string",
-            "example": "john"
-          },
-          "email": {
-            "type": "string",
-            "example": "john@example.com"
-          }
+          "user_id": { "type": "integer" },
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "first_name": { "type": "string" },
+          "last_name": { "type": "string" },
+          "is_active": { "type": "boolean" }
         }
       },
       "UserInput": {
         "type": "object",
-        "required": ["username", "email", "password_hash"],
+        "required": ["username", "email", "password"],
         "properties": {
-          "username": {
-            "type": "string",
-            "example": "john"
-          },
-          "email": {
-            "type": "string",
-            "example": "john@example.com"
-          },
-          "password_hash": {
-            "type": "string",
-            "example": "hashedpassword123"
-          }
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" },
+          "first_name": { "type": "string" },
+          "last_name": { "type": "string" }
         }
       },
       "Role": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string",
-            "example": "Admin"
-          }
+          "role_id": { "type": "integer" },
+          "role_name": { "type": "string" },
+          "description": { "type": "string" },
+          "is_system_role": { "type": "boolean" }
         }
       },
       "RoleInput": {
         "type": "object",
-        "required": ["name"],
+        "required": ["role_name"],
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "Admin"
-          }
+          "role_name": { "type": "string" },
+          "description": { "type": "string" },
+          "is_system_role": { "type": "boolean" }
         }
       },
       "Permission": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
+          "permission_id": { "type": "integer" },
+          "permission_code": { "type": "string" },
+          "permission_name": { "type": "string" },
+          "description": { "type": "string" }
         }
       },
       "PermissionInput": {
         "type": "object",
-        "required": ["name", "description"],
+        "required": ["permission_code", "permission_name"],
         "properties": {
-          "name": {
+          "permission_code": { "type": "string" },
+          "permission_name": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      },
+      "Resource": {
+        "type": "object",
+        "properties": {
+          "resource_id": { "type": "integer" },
+          "resource_code": { "type": "string" },
+          "resource_name": { "type": "string" },
+          "resource_type": {
             "type": "string",
-            "example": "dashboard.view"
+            "enum": ["PAGE", "SIDEBAR_ITEM", "COMPONENT", "API_ENDPOINT"]
           },
-          "description": {
+          "parent_id": { "type": "integer", "nullable": true },
+          "module_conde": { "type": "string" },
+          "display_order": { "type": "integer" },
+          "icon": { "type": "string" },
+          "path": { "type": "string" },
+          "description": { "type": "string" },
+          "is_active": { "type": "boolean" }
+        }
+      },
+      "ResourceInput": {
+        "type": "object",
+        "required": ["resource_code", "resource_name", "resource_type"],
+        "properties": {
+          "resource_code": { "type": "string" },
+          "resource_name": { "type": "string" },
+          "resource_type": {
             "type": "string",
-            "example": "Ver el dashboard"
-          }
-        }
-      },
-      "Module": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
+            "enum": ["PAGE", "SIDEBAR_ITEM", "COMPONENT", "API_ENDPOINT"]
           },
-          "name": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "icon": {
-            "type": "string"
-          }
-        }
-      },
-      "ModuleInput": {
-        "type": "object",
-        "required": ["name", "path", "icon"],
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "icon": {
-            "type": "string"
-          }
-        }
-      },
-      "Submodule": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "module_id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "icon": {
-            "type": "string"
-          }
-        }
-      },
-      "SubmoduleInput": {
-        "type": "object",
-        "required": ["module_id", "name", "path", "icon"],
-        "properties": {
-          "module_id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "icon": {
-            "type": "string"
-          }
-        }
-      },
-      "Component": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "module_id": {
-            "type": "integer"
-          },
-          "submodule_id": {
-            "type": "integer"
-          }
-        }
-      },
-      "ComponentInput": {
-        "type": "object",
-        "required": ["name", "type"],
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": ["tab", "button"]
-          },
-          "module_id": {
-            "type": "integer"
-          },
-          "submodule_id": {
-            "type": "integer"
-          }
+          "parent_id": { "type": "integer", "nullable": true },
+          "module_conde": { "type": "string" },
+          "display_order": { "type": "integer" },
+          "icon": { "type": "string" },
+          "path": { "type": "string" },
+          "description": { "type": "string" }
         }
       }
     }
   },
   "tags": [
-    {
-      "name": "Users",
-      "description": "Operaciones con users"
-    },
-    {
-      "name": "Roles",
-      "description": "Operaciones con roles"
-    },
-    {
-      "name": "Permissions",
-      "description": "Operaciones con permissions"
-    },
-    {
-      "name": "Modules",
-      "description": "Operaciones con modules"
-    },
-    {
-      "name": "Submodules",
-      "description": "Operaciones con submodules"
-    },
-    {
-      "name": "Components",
-      "description": "Operaciones con components"
-    }
+    { "name": "Users", "description": "Operaciones con usuarios" },
+    { "name": "Roles", "description": "Operaciones con roles" },
+    { "name": "Permissions", "description": "Operaciones con permisos" },
+    { "name": "Resources", "description": "Operaciones con recursos" }
   ]
 }
