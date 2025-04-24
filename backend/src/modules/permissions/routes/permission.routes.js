@@ -2,8 +2,8 @@ import { Router } from "express";
 
 import {
   addPermission,
-  listPermissions,
   assignPermissionToRole,
+  listPermissions,
 } from "../controllers/permission.controller.js";
 
 const permissionRoutes = Router();

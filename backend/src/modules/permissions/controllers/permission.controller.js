@@ -1,5 +1,5 @@
+import { assignPermissionToRoleDto } from "../dtos/assignPermissionToRoleDto.js";
 import { createPermissionDto } from "../dtos/createPermissionDto.js";
-import { assignPermissionDto } from "../dtos/assignPermissionDto.js";
 import * as permissionService from "../services/permission.service.js";
 
 export const listPermissions = async (_, res) => {
@@ -30,7 +30,7 @@ export const addPermission = async (req, res) => {
 };
 
 export const assignPermissionToRole = async (req, res) => {
-  const { isValid, errors, value } = assignPermissionDto(req.body);
+  const { isValid, errors, value } = assignPermissionToRoleDto(req.body);
 
   if (!isValid) {
     return res.status(400).json({
@@ -41,7 +41,7 @@ export const assignPermissionToRole = async (req, res) => {
 
   try {
     await permissionService.assignPermissionToRole(value);
-    return res.status(200).json({ message: "Permission assigned" });
+    return res.status(200).json({ message: "Permission assigned to role successfully." });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

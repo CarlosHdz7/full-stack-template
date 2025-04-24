@@ -6,13 +6,16 @@ export const getAllPermissions = async () => {
   return rows;
 };
 
-export const createPermission = async ({ name, description }) => {
+export const createPermission = async ({ permission_code, permission_name, description }) => {
   await connection.query(
-    `CALL ${PermissionModel.procedures.create}(?, ?)`,
-    [name, description]
+    `CALL ${PermissionModel.procedures.create}(?, ?, ?)`,
+    [permission_code, permission_name, description]
   );
 };
 
-export const assignPermissionToRole = async ({ role_id, permission_id }) => {
-  await connection.query(`CALL sp_assign_permission(?, ?)`, [role_id, permission_id]);
+export const assignPermissionToRole = async ({ role_id, resource_id, permission_id }) => {
+  await connection.query(
+    `CALL ${PermissionModel.procedures.assignToRole}(?, ?, ?)`,
+    [role_id, resource_id, permission_id]
+  );
 };

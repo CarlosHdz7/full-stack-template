@@ -6,8 +6,11 @@ export const getAllRoles = async () => {
   return rows;
 };
 
-export const createRole = async ({ name }) => {
-  await connection.query(`CALL ${RoleModel.procedures.create}(?)`, [name]);
+export const createRole = async ({ role_name, description }) => {
+  await connection.query(
+    `CALL ${RoleModel.procedures.create}(?, ?)`,
+    [role_name, description]
+  );
 };
 
 export const assignRoleToUser = async ({ user_id, role_id }) => {

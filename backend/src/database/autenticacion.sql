@@ -1,273 +1,230 @@
 
+CREATE DATABASE IF NOT EXISTS mydb;
+USE mydb;
+
+
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
   email VARCHAR(100) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(50),
+  last_name VARCHAR(50),
   is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
 CREATE TABLE roles (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50) NOT NULL UNIQUE
+  role_id INT AUTO_INCREMENT PRIMARY KEY,
+  role_name VARCHAR(50) NOT NULL UNIQUE,
+  description VARCHAR(255),
+  is_system_role BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
 CREATE TABLE user_roles (
-  user_id INT,
-  role_id INT,
-  PRIMARY KEY(user_id, role_id),
-  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY(role_id) REFERENCES roles(id) ON DELETE CASCADE
+  user_role_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  role_id INT NOT NULL,
+  assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE,
+  UNIQUE KEY unique_user_role (user_id, role_id)
+);
+
+
+CREATE TABLE resources (
+  resource_id INT AUTO_INCREMENT PRIMARY KEY,
+  resource_code VARCHAR(100) NOT NULL UNIQUE,
+  resource_name VARCHAR(100) NOT NULL,
+  resource_type ENUM('PAGE', 'SIDEBAR_ITEM', 'COMPONENT', 'API_ENDPOINT') NOT NULL,
+  parent_id INT NULL,
+  module_conde VARCHAR(100),
+  display_order INT DEFAULT 0,
+  icon VARCHAR(50),
+  path VARCHAR(255),
+  description VARCHAR(255),
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (parent_id) REFERENCES resources(resource_id) ON DELETE SET NULL
 );
 
 
 CREATE TABLE permissions (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  description TEXT
+  permission_id INT AUTO_INCREMENT PRIMARY KEY,
+  permission_code VARCHAR(100) NOT NULL UNIQUE,
+  permission_name VARCHAR(100) NOT NULL,
+  description VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE resource_permissions (
+  resource_permission_id INT AUTO_INCREMENT PRIMARY KEY,
+  resource_id INT NOT NULL,
+  permission_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (resource_id) REFERENCES resources(resource_id) ON DELETE CASCADE,
+  FOREIGN KEY (permission_id) REFERENCES permissions(permission_id) ON DELETE CASCADE,
+  UNIQUE KEY unique_resource_permission (resource_id, permission_id)
 );
 
 
 CREATE TABLE role_permissions (
-  role_id INT,
-  permission_id INT,
-  PRIMARY KEY(role_id, permission_id),
-  FOREIGN KEY(role_id) REFERENCES roles(id) ON DELETE CASCADE,
-  FOREIGN KEY(permission_id) REFERENCES permissions(id) ON DELETE CASCADE
+  role_permission_id INT AUTO_INCREMENT PRIMARY KEY,
+  role_id INT NOT NULL,
+  resource_id INT NOT NULL,
+  permission_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE,
+  FOREIGN KEY (resource_id) REFERENCES resources(resource_id) ON DELETE CASCADE,
+  FOREIGN KEY (permission_id) REFERENCES permissions(permission_id) ON DELETE CASCADE,
+  UNIQUE KEY unique_role_resource_permission (role_id, resource_id, permission_id)
 );
 
 
-CREATE TABLE modules (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL UNIQUE,
-  path VARCHAR(255),
-  icon VARCHAR(100)
-);
 
-
-CREATE TABLE submodules (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  module_id INT NOT NULL,
-  name VARCHAR(100) NOT NULL,
-  path VARCHAR(255),
-  icon VARCHAR(100),
-  FOREIGN KEY(module_id) REFERENCES modules(id) ON DELETE CASCADE
-);
-
-
-CREATE TABLE components (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  type ENUM('tab', 'button') NOT NULL,
-  module_id INT,
-  submodule_id INT,
-  FOREIGN KEY(module_id) REFERENCES modules(id) ON DELETE CASCADE,
-  FOREIGN KEY(submodule_id) REFERENCES submodules(id) ON DELETE CASCADE,
-  CHECK (
-    (module_id IS NOT NULL AND submodule_id IS NULL) OR
-    (module_id IS NULL AND submodule_id IS NOT NULL)
-  )
-);
-
-
-CREATE TABLE permission_components (
-  permission_id INT,
-  component_id INT,
-  PRIMARY KEY(permission_id, component_id),
-  FOREIGN KEY(permission_id) REFERENCES permissions(id) ON DELETE CASCADE,
-  FOREIGN KEY(component_id) REFERENCES components(id) ON DELETE CASCADE
-);
-
-
-INSERT INTO roles (name) VALUES ('Admin');
-
-INSERT INTO modules (name, path, icon) VALUES 
-('Dashboard', '/dashboard', 'dashboard'),
-('Productos', '/productos', 'box');
-
-INSERT INTO submodules (module_id, name, path, icon) VALUES 
-(2, 'De Proveedores', '/proveedores/productos', 'truck'),
-(2, 'De Managua', '/productos/managua', 'map');
-
-INSERT INTO components (name, type, module_id) VALUES 
-('Resumen general', 'tab', 1),
-('Actualizar métricas', 'button', 1);
-
-INSERT INTO components (name, type, submodule_id) VALUES 
-('Ver lista', 'tab', 2),
-('Crear', 'button', 2);
-
-INSERT INTO permissions (name, description) VALUES 
-('dashboard.view_summary', 'Puede ver resumen del dashboard'),
-('productos.managua.create', 'Puede crear productos en Managua');
-
-INSERT INTO role_permissions (role_id, permission_id) VALUES 
-(1, 1),
-(1, 2);
-
-INSERT INTO permission_components (permission_id, component_id) VALUES 
-(1, 1),
-(2, 4);
-
-
-
-CREATE PROCEDURE sp_create_user(IN p_username VARCHAR(50), IN p_email VARCHAR(100), IN p_password_hash VARCHAR(255))
+-- Crear usuario
+DROP PROCEDURE IF EXISTS sp_create_user;
+CREATE PROCEDURE sp_create_user(
+  IN p_username VARCHAR(50),
+  IN p_email VARCHAR(100),
+  IN p_password_hash VARCHAR(255)
+)
 BEGIN
   INSERT INTO users (username, email, password_hash)
   VALUES (p_username, p_email, p_password_hash);
 END;
 
-CREATE PROCEDURE sp_update_user(IN p_id INT, IN p_username VARCHAR(50), IN p_email VARCHAR(100))
+-- Actualizar usuario
+DROP PROCEDURE IF EXISTS sp_update_user;
+CREATE PROCEDURE sp_update_user(
+  IN p_id INT,
+  IN p_username VARCHAR(50),
+  IN p_email VARCHAR(100)
+)
 BEGIN
-  UPDATE users SET username = p_username, email = p_email WHERE id = p_id;
+  UPDATE users SET username = p_username, email = p_email
+  WHERE user_id = p_id;
 END;
 
-
-
-
+-- Eliminar usuario
+DROP PROCEDURE IF EXISTS sp_delete_user;
 CREATE PROCEDURE sp_delete_user(IN p_id INT)
 BEGIN
-  DELETE FROM users WHERE id = p_id;
+  DELETE FROM users WHERE user_id = p_id;
 END;
 
-
-
-
-CREATE PROCEDURE sp_create_role(IN p_name VARCHAR(50))
+-- Crear rol
+DROP PROCEDURE IF EXISTS sp_create_role;
+CREATE PROCEDURE sp_create_role(IN p_role_name VARCHAR(50), IN p_description VARCHAR(255))
 BEGIN
-  INSERT INTO roles (name) VALUES (p_name);
+  INSERT INTO roles (role_name, description) VALUES (p_role_name, p_description);
 END;
 
-
-
-
-
-CREATE PROCEDURE sp_create_permission(IN p_name VARCHAR(100), IN p_description TEXT)
+-- Crear permiso
+DROP PROCEDURE IF EXISTS sp_create_permission;
+CREATE PROCEDURE sp_create_permission(
+  IN p_permission_code VARCHAR(100),
+  IN p_permission_name VARCHAR(100),
+  IN p_description TEXT
+)
 BEGIN
-  INSERT INTO permissions (name, description)
-  VALUES (p_name, p_description);
+  INSERT INTO permissions (permission_code, permission_name, description)
+  VALUES (p_permission_code, p_permission_name, p_description);
 END;
 
-
-
-
-
+-- Asignar rol a usuario
+DROP PROCEDURE IF EXISTS sp_assign_role;
 CREATE PROCEDURE sp_assign_role(IN p_user_id INT, IN p_role_id INT)
 BEGIN
   INSERT IGNORE INTO user_roles (user_id, role_id)
   VALUES (p_user_id, p_role_id);
 END;
 
-
-
-
-
-CREATE PROCEDURE sp_assign_permission(IN p_role_id INT, IN p_permission_id INT)
+-- Asignar permiso a recurso
+DROP PROCEDURE IF EXISTS sp_create_resource_permission;
+CREATE PROCEDURE sp_create_resource_permission(
+  IN p_resource_id INT,
+  IN p_permission_id INT
+)
 BEGIN
-  INSERT IGNORE INTO role_permissions (role_id, permission_id)
-  VALUES (p_role_id, p_permission_id);
+  INSERT IGNORE INTO resource_permissions(resource_id, permission_id)
+  VALUES (p_resource_id, p_permission_id);
 END;
 
+-- Asignar permiso a rol en recurso
+DROP PROCEDURE IF EXISTS sp_assign_permission_to_role;
+CREATE PROCEDURE sp_assign_permission_to_role(
+  IN p_role_id INT,
+  IN p_resource_id INT,
+  IN p_permission_id INT
+)
+BEGIN
+  INSERT IGNORE INTO role_permissions(role_id, resource_id, permission_id)
+  VALUES (p_role_id, p_resource_id, p_permission_id);
+END;
 
-
-
-CREATE PROCEDURE sp_create_module(
-  IN p_name VARCHAR(100),
+-- Crear recurso
+DROP PROCEDURE IF EXISTS sp_create_resource;
+CREATE PROCEDURE sp_create_resource(
+  IN p_resource_code VARCHAR(100),
+  IN p_resource_name VARCHAR(100),
+  IN p_resource_type ENUM('PAGE', 'SIDEBAR_ITEM', 'COMPONENT', 'API_ENDPOINT'),
+  IN p_parent_id INT,
+  IN p_module_code VARCHAR(100),
+  IN p_display_order INT,
+  IN p_icon VARCHAR(50),
   IN p_path VARCHAR(255),
-  IN p_icon VARCHAR(100)
+  IN p_description VARCHAR(255)
 )
 BEGIN
-  INSERT INTO modules (name, path, icon)
-  VALUES (p_name, p_path, p_icon);
+  INSERT INTO resources (
+    resource_code, resource_name, resource_type, parent_id,
+    module_conde, display_order, icon, path, description
+  )
+  VALUES (
+    p_resource_code, p_resource_name, p_resource_type, p_parent_id,
+    p_module_code, p_display_order, p_icon, p_path, p_description
+  );
 END;
 
-
-
-
-
-CREATE PROCEDURE sp_create_submodule(
-  IN p_module_id INT,
-  IN p_name VARCHAR(100),
-  IN p_path VARCHAR(255),
-  IN p_icon VARCHAR(100)
-)
-BEGIN
-  INSERT INTO submodules (module_id, name, path, icon)
-  VALUES (p_module_id, p_name, p_path, p_icon);
-END;
-
-
-
-
-
-
-CREATE PROCEDURE sp_create_component(
-  IN p_name VARCHAR(100),
-  IN p_type ENUM('tab', 'button'),
-  IN p_module_id INT,
-  IN p_submodule_id INT
-)
-BEGIN
-  INSERT INTO components (name, type, module_id, submodule_id)
-  VALUES (p_name, p_type, p_module_id, p_submodule_id);
-END;
-
-
-
-
-
+-- Obtener estructura de acceso de usuario
 DROP PROCEDURE IF EXISTS sp_get_user_access_structure;
-
 CREATE PROCEDURE sp_get_user_access_structure(IN p_user_id INT)
 BEGIN
-  SELECT JSON_OBJECT(
-    'modules', JSON_ARRAYAGG(
-      JSON_OBJECT(
-        'name', m.name,
-        'path', m.path,
-        'icon', m.icon,
-        'components', COALESCE((
-          SELECT JSON_ARRAYAGG(
-            JSON_OBJECT('name', c1.name, 'type', c1.type)
+  SELECT JSON_ARRAYAGG(
+    JSON_OBJECT(
+      'resource_code', r.resource_code,
+      'resource_name', r.resource_name,
+      'resource_type', r.resource_type,
+      'icon', r.icon,
+      'path', r.path,
+      'children', COALESCE((
+        SELECT JSON_ARRAYAGG(
+          JSON_OBJECT(
+            'resource_code', r2.resource_code,
+            'resource_name', r2.resource_name,
+            'resource_type', r2.resource_type,
+            'icon', r2.icon,
+            'path', r2.path
           )
-          FROM components c1
-          JOIN permission_components pc1 ON pc1.component_id = c1.id
-          JOIN permissions p1 ON p1.id = pc1.permission_id
-          JOIN role_permissions rp1 ON rp1.permission_id = p1.id
-          JOIN user_roles ur1 ON ur1.role_id = rp1.role_id
-          WHERE c1.module_id = m.id AND c1.submodule_id IS NULL AND ur1.user_id = p_user_id
-        ), JSON_ARRAY()),
-        'submodules', COALESCE((
-          SELECT JSON_ARRAYAGG(
-            JSON_OBJECT(
-              'name', sm.name,
-              'path', sm.path,
-              'icon', sm.icon,
-              'components', COALESCE((
-                SELECT JSON_ARRAYAGG(
-                  JSON_OBJECT('name', c2.name, 'type', c2.type)
-                )
-                FROM components c2
-                JOIN permission_components pc2 ON pc2.component_id = c2.id
-                JOIN permissions p2 ON p2.id = pc2.permission_id
-                JOIN role_permissions rp2 ON rp2.permission_id = p2.id
-                JOIN user_roles ur2 ON ur2.role_id = rp2.role_id
-                WHERE c2.submodule_id = sm.id AND ur2.user_id = p_user_id
-              ), JSON_ARRAY())
-            )
-          )
-          FROM submodules sm
-          WHERE sm.module_id = m.id
-        ), JSON_ARRAY())
-      )
+        )
+        FROM resources r2
+        JOIN role_permissions rp2 ON rp2.resource_id = r2.resource_id
+        JOIN user_roles ur2 ON ur2.role_id = rp2.role_id
+        WHERE r2.parent_id = r.resource_id AND ur2.user_id = p_user_id
+      ), JSON_ARRAY())
     )
   ) AS user_access_json
-  FROM modules m;
+  FROM resources r
+  JOIN role_permissions rp ON rp.resource_id = r.resource_id
+  JOIN user_roles ur ON ur.role_id = rp.role_id
+  WHERE r.parent_id IS NULL AND ur.user_id = p_user_id;
 END;
-
-CALL sp_assign_role(1, 1);
-
-
