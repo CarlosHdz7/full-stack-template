@@ -1,5 +1,6 @@
 import * as userService from "../services/user.service.js";
 import { createUserDto } from "../dtos/createUserDto.js";
+import { BcryptAdapter } from "../../../helpers/bcrypt.helper.js";
 
 export const listUsers = async (_, res) => {
   try {
@@ -18,7 +19,12 @@ export const addUser = async (req, res) => {
   }
 
   try {
-    await userService.createUser(value);
+    const hashedPassword = BcryptAdapter.hash(value.password_hash);
+    const userWithEncryptedPassword = {
+      ...value,
+      password_hash: hashedPassword,
+    };
+    await userService.createUser(userWithEncryptedPassword);
     return res.status(201).json({ ok: true });
   } catch (error) {
     return res.status(500).json({ message: error.message });
