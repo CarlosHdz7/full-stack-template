@@ -16,4 +16,8 @@ export const envs = {
     password: env.get("DB_PASSWORD").required().asString(),
     name: env.get("DB_NAME").required().asString(),
   },
+  jwt: {
+    secret: env.get("JWT_SECRET").required().asString(),
+    expiresIn: env.get("JWT_EXPIRES_IN").default("2h").asString(),
+  },
 };

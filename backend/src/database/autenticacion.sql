@@ -109,6 +109,7 @@ BEGIN
   VALUES (p_username, p_email, p_password_hash);
 END;
 
+
 -- Actualizar usuario
 DROP PROCEDURE IF EXISTS sp_update_user;
 CREATE PROCEDURE sp_update_user(
@@ -202,36 +203,70 @@ BEGIN
   );
 END;
 
--- Obtener estructura de acceso de usuario
-DROP PROCEDURE IF EXISTS sp_get_user_access_structure;
-CREATE PROCEDURE sp_get_user_access_structure(IN p_user_id INT)
+
+CREATE PROCEDURE sp_login_user(IN p_email VARCHAR(100))
 BEGIN
-  SELECT JSON_ARRAYAGG(
-    JSON_OBJECT(
-      'resource_code', r.resource_code,
-      'resource_name', r.resource_name,
-      'resource_type', r.resource_type,
-      'icon', r.icon,
-      'path', r.path,
-      'children', COALESCE((
+  DECLARE v_user_id INT;
+
+  -- Obtener el ID del usuario
+  SELECT user_id INTO v_user_id
+  FROM users
+  WHERE email = p_email AND is_active = TRUE
+  LIMIT 1;
+
+  -- Validar si existe el usuario
+  IF v_user_id IS NOT NULL THEN
+
+    -- Retornar la info básica del usuario y sus roles
+    SELECT 
+      u.user_id,
+      u.username,
+      u.email,
+      u.password_hash,
+      JSON_ARRAYAGG(
+        JSON_OBJECT(
+          'role_id', r.role_id,
+          'role_name', r.role_name
+        )
+      ) AS roles,
+      
+      -- Accesos del usuario en formato JSON
+      (
         SELECT JSON_ARRAYAGG(
           JSON_OBJECT(
-            'resource_code', r2.resource_code,
-            'resource_name', r2.resource_name,
-            'resource_type', r2.resource_type,
-            'icon', r2.icon,
-            'path', r2.path
+            'resource_code', r.resource_code,
+            'resource_name', r.resource_name,
+            'resource_type', r.resource_type,
+            'icon', r.icon,
+            'path', r.path,
+            'children', COALESCE((
+              SELECT JSON_ARRAYAGG(
+                JSON_OBJECT(
+                  'resource_code', r2.resource_code,
+                  'resource_name', r2.resource_name,
+                  'resource_type', r2.resource_type,
+                  'icon', r2.icon,
+                  'path', r2.path
+                )
+              )
+              FROM resources r2
+              JOIN role_permissions rp2 ON rp2.resource_id = r2.resource_id
+              JOIN user_roles ur2 ON ur2.role_id = rp2.role_id
+              WHERE r2.parent_id = r.resource_id AND ur2.user_id = v_user_id
+            ), JSON_ARRAY())
           )
         )
-        FROM resources r2
-        JOIN role_permissions rp2 ON rp2.resource_id = r2.resource_id
-        JOIN user_roles ur2 ON ur2.role_id = rp2.role_id
-        WHERE r2.parent_id = r.resource_id AND ur2.user_id = p_user_id
-      ), JSON_ARRAY())
-    )
-  ) AS user_access_json
-  FROM resources r
-  JOIN role_permissions rp ON rp.resource_id = r.resource_id
-  JOIN user_roles ur ON ur.role_id = rp.role_id
-  WHERE r.parent_id IS NULL AND ur.user_id = p_user_id;
+        FROM resources r
+        JOIN role_permissions rp ON rp.resource_id = r.resource_id
+        JOIN user_roles ur ON ur.role_id = rp.role_id
+        WHERE r.parent_id IS NULL AND ur.user_id = v_user_id
+      ) AS user_access_json
+
+    FROM users u
+    LEFT JOIN user_roles ur ON ur.user_id = u.user_id
+    LEFT JOIN roles r ON r.role_id = ur.role_id
+    WHERE u.user_id = v_user_id
+    GROUP BY u.user_id;
+
+  END IF;
 END;

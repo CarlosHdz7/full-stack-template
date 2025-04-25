@@ -14,10 +14,8 @@ export const createUser = async ({ username, email, password_hash }) => {
   ]);
 };
 
-export const getUserAccessStructure = async (user_id) => {
-  const [rows] = await connection.query(
-    `CALL ${UserModel.procedures.getAccess}(?)`,
-    [user_id]
-  );
-  return rows[0];
+export const loginUser = async (email) => {
+  const [rows] = await connection.query(`CALL ${UserModel.procedures.login}(?)`, [email]);
+  return rows[0][0];
 };
+
