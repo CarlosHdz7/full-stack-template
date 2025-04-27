@@ -2,7 +2,7 @@ import styles from './Sidebar.module.css';
 import Typography from '@components/atoms/typography';
 import Box from '@components/atoms/box';
 import { ROUTES } from '@constants/routes';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 import { useI18n } from '@contexts/languageContext';
 
 const Sidebar = () => {

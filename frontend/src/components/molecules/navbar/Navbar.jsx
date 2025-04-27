@@ -3,7 +3,7 @@ import { ROUTES } from '@constants/routes';
 import { useTheme } from '@contexts/themeContext';
 
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router';
 import { useI18n } from '@contexts/languageContext';
 import styles from './Navbar.module.css';
 import Box from '@components/atoms/box';
