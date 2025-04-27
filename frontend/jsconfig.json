@@ -10,7 +10,8 @@
       "@contexts/*": ["src/lib/contexts/*"],
       "@hooks/*": ["src/lib/hooks/*"],
       "@locales/*": ["src/lib/locales/*"],
-      "@services/*": ["src/lib/services/api/*"]
+      "@services/*": ["src/lib/services/api/*"],
+      "@sockets/*": ["src/socket/*"]
     }
   },
   "include": ["src"]

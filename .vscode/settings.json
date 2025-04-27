@@ -11,5 +11,11 @@
     "typescript",
     "typescriptreact"
   ],
-  "eslint.alwaysShowStatus": true
+  "workbench.editor.customLabels.patterns": {
+    "**/pages/**": "${filename}.${extname} - Page",
+    "**/components/atoms/**": "${filename}.${extname} - Atom",
+    "**/components/molecules/**": "${filename}.${extname} - Molecule",
+    "**/components/layouts/**": "${filename}.${extname} - Layout",
+    "**/components/organisms/**": "${filename}.${extname} - Organisms"
+  }
 }

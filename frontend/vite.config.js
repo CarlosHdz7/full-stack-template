@@ -37,6 +37,7 @@ export default defineConfig(({ mode }) => {
         '@hooks': path.resolve(__dirname, 'src/lib/hooks'),
         '@locales': path.resolve(__dirname, 'src/lib/locales'),
         '@services': path.resolve(__dirname, 'src/lib/services/api'),
+        '@sockets': path.resolve(__dirname, 'src/socket'),
       },
     },
   };
