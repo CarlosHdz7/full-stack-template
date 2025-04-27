@@ -1,58 +1,108 @@
-import axios from 'axios';
-
 export default class HttpClient {
   constructor(baseURL = '') {
-    this.client = axios.create({ baseURL });
+    this.baseURL = baseURL;
+  }
 
-    this.client.interceptors.request.use((config) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
+  // Helper to build the full URL
+  _buildUrl(url) {
+    return `${this.baseURL}${url}`;
+  }
 
-    // Add interceptor for expired sessions
+  // Helper to add authorization header
+  _getHeaders() {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    return headers;
   }
 
   async get(url, config = {}) {
-    return this._request(() => this.client.get(url, config));
+    return this._request(this._buildUrl(url), {
+      method: 'GET',
+      ...config,
+      headers: {
+        ...this._getHeaders(),
+        ...config.headers,
+      },
+    });
   }
 
   async post(url, data = {}, config = {}) {
-    return this._request(() => this.client.post(url, data, config));
+    return this._request(this._buildUrl(url), {
+      method: 'POST',
+      body: JSON.stringify(data),
+      ...config,
+      headers: {
+        ...this._getHeaders(),
+        ...config.headers,
+      },
+    });
   }
 
   async put(url, data = {}, config = {}) {
-    return this._request(() => this.client.put(url, data, config));
+    return this._request(this._buildUrl(url), {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      ...config,
+      headers: {
+        ...this._getHeaders(),
+        ...config.headers,
+      },
+    });
   }
 
   async delete(url, config = {}) {
-    return this._request(() => this.client.delete(url, config));
+    return this._request(this._buildUrl(url), {
+      method: 'DELETE',
+      ...config,
+      headers: {
+        ...this._getHeaders(),
+        ...config.headers,
+      },
+    });
   }
 
   // Handle Data and Errors for requests
-  async _request(requestFn) {
+  async _request(url, options) {
     try {
-      const response = await requestFn();
-      return { ok: true, data: response.data };
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        return {
+          ok: false,
+          error: errorData.message || `Error ${response.status}`,
+        };
+      }
+
+      // Check if response is empty
+      const contentType = response.headers.get('content-type');
+      let data;
+
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        data = await response.text();
+      }
+
+      return { ok: true, data };
     } catch (error) {
-      if (axios.isCancel(error)) {
+      if (error.name === 'AbortError') {
         // eslint-disable-next-line no-console
         console.warn('[Solicitud cancelada]');
         throw new Error('AbortError');
       }
 
-      let message = 'Uknown Error';
-
-      if (error.response) {
-        message = error.response.data?.message || `Error ${error.response.status}`;
-      } else if (error.request) {
-        message = 'Could not connect with server';
-      } else {
-        message = error.message;
-      }
-      return { ok: false, error: message };
+      return {
+        ok: false,
+        error: 'Could not connect with server',
+      };
     }
   }
 }
