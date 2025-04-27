@@ -2,7 +2,7 @@ import PublicLayout from '@components/layouts/publicLayout';
 import { ROUTES } from '@constants/routes';
 import NotFound from '@pages/NotFound';
 import Login from '@pages/auth/login';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import ProtectedRoutes from './ProtectedRoutes';
 
 const AuthRoutes = () => {

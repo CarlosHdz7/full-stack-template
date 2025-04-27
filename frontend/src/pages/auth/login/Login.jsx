@@ -3,7 +3,7 @@ import Button from '@components/atoms/button';
 import { Col, Container, Row } from '@components/atoms/grid';
 import { ROUTES } from '@constants/routes';
 import useLocalStorage from '@hooks/useLocalStorage';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const Login = () => {
   const navigate = useNavigate();

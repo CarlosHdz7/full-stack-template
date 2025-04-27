@@ -1,4 +1,4 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router';
 import NotFound from '@pages/NotFound';
 import { BASE_ROUTES, ROUTES } from '@constants/routes';
 import PublicRoutes from './PublicRoutes';

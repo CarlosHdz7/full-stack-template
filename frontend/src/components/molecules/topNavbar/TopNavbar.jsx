@@ -3,7 +3,7 @@ import { useI18n } from '@contexts/languageContext';
 import { useTheme } from '@contexts/themeContext';
 import styles from './TopNavbar.module.css';
 import Button from '@components/atoms/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ROUTES } from '@constants/routes';
 
 const TopNavbar = () => {

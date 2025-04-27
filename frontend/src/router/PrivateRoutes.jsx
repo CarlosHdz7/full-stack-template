@@ -1,5 +1,5 @@
 import { ROUTES } from '@constants/routes';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 import PrivateLayout from '../components/layouts/privateLayout';
 
 import Home from '@pages/private/home';
