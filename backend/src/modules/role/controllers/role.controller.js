@@ -46,3 +46,26 @@ export const assignRoleToUser = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
+export const updateRole = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await roleService.updateRole(id, req.body);
+    return res.status(200).json({ message: "Role updated" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+export const deleteRole = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await roleService.deleteRole(id);
+    return res.status(200).json({ message: "Role deleted" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
