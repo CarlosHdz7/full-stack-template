@@ -19,3 +19,14 @@ export const assignPermissionToRole = async ({ role_id, resource_id, permission_
     [role_id, resource_id, permission_id]
   );
 };
+
+export const updatePermission = async (id, { permission_code, permission_name, description }) => {
+  await connection.query(
+    `CALL ${PermissionModel.procedures.update}(?, ?, ?, ?)`,
+    [id, permission_code, permission_name, description]
+  );
+}
+
+export const deletePermission = async (id) => {
+  await connection.query(`CALL ${PermissionModel.procedures.delete}(?)`, [id]);
+}

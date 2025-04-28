@@ -24,3 +24,25 @@ export const listResources = async (_, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const updateResource = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await resourceService.updateResource(id, req.body);
+    return res.status(200).json({ message: "Resource updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+export const deleteResource = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await resourceService.deleteResource(id);
+    return res.status(200).json({ message: "Resource deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
