@@ -46,3 +46,30 @@ export const assignPermissionToRole = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const updatePermission = async (req, res) => {
+  const { id } = req.params;
+  const { permission_code, permission_name, description } = req.body;
+
+  try {
+    await permissionService.updatePermission(id, {
+      permission_code,
+      permission_name,
+      description,
+    });
+    return res.status(200).json({ message: "Permission updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+export const deletePermission = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await permissionService.deletePermission(id);
+    return res.status(200).json({ message: "Permission deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}

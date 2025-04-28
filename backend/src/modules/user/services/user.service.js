@@ -19,3 +19,17 @@ export const loginUser = async (email) => {
   return rows[0][0];
 };
 
+export const deletedUser = async (id) => {
+  const [rows] = await connection.query(`CALL ${UserModel.procedures.delete}(?)`, [id]);
+  return rows[0][0];
+}
+
+export const updateUser = async (id, { username, email, password_hash }) => {
+  const [rows] = await connection.query(`CALL ${UserModel.procedures.update}(?, ?, ?, ?)`, [
+    id,
+    username,
+    email,
+    password_hash,
+  ]);
+  return rows[0][0];
+}

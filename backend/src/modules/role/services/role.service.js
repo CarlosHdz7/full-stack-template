@@ -16,3 +16,14 @@ export const createRole = async ({ role_name, description }) => {
 export const assignRoleToUser = async ({ user_id, role_id }) => {
   await connection.query(`CALL sp_assign_role(?, ?)`, [user_id, role_id]);
 };
+
+export const updateRole = async (id, { role_name, description }) => {
+  await connection.query(
+    `CALL ${RoleModel.procedures.update}(?, ?, ?)`,
+    [id, role_name, description]
+  );
+}
+
+export const deleteRole = async (id) => {
+  await connection.query(`CALL ${RoleModel.procedures.delete}(?)`, [id]);
+};
